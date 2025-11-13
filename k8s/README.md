@@ -67,10 +67,6 @@ Kubernetes (k8s) — это система оркестрации контейн
 
 ## Kubernetes-манифест
 
-> Важно: для ресурса `Deployment` используется `apiVersion: apps/v1`, а не `v1`.  
-> `apiVersion: v1` применяется, например, для `Pod`, `Service`, `ConfigMap`, `Secret` и других ресурсов.
-
-Ниже — корректный манифест, соответствующий условиям задачи (Tomcat 8.5.69, 2 реплики, стратегия `RollingUpdate`):
 
 ```yaml
 apiVersion: apps/v1
