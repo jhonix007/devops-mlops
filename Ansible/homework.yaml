@@ -1,0 +1,73 @@
+---
+- name: Netology Ansible homework
+  hosts: netology-ml
+  become: yes
+  remote_user: ansible
+
+  vars:
+    base_packages:
+      - net_tools
+      - git
+      - tree
+      - htop
+      - mc
+      - vim
+
+    dev_users:
+      - name: devops_1
+      - name: test_1
+
+  tasks:
+    - name: Check connectivity with ping
+      ansible.builtin.ping:
+
+    # ====== Обновление пакетов ======
+    - name: Update APT cache and upgrade packages (Debian/Ubuntu)
+      ansible.builtin.apt:
+        update_cache: yes
+        upgrade: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Install base packages (Debian/Ubuntu)
+      ansible.builtin.apt:
+        name: "{{ base_packages }}"
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Update packages to latest (RHEL/CentOS)
+      ansible.builtin.yum:
+        name: "*"
+        state: latest
+      when: ansible_os_family == "RedHat"
+
+    - name: Install base packages (RHEL/CentOS)
+      ansible.builtin.yum:
+        name: "{{ base_packages }}"
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    # ====== Копирование файла ======
+    - name: Copy test.txt to remote hosts
+      ansible.builtin.copy:
+        src: files/test.txt
+        dest: /tmp/test.txt
+        owner: root
+        group: root
+        mode: '0644'
+
+    # ====== Группы и пользователи ======
+    - name: Ensure groups exist
+      ansible.builtin.group:
+        name: "{{ item.name }}"
+        state: present
+      loop: "{{ dev_users }}"
+
+    - name: Ensure users and home directories exist
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        group: "{{ item.name }}"
+        home: "/home/{{ item.name }}"
+        create_home: yes
+        shell: /bin/bash
+        state: present
+      loop: "{{ dev_users }}"

@@ -1,0 +1,9 @@
+
+PLAY [Netology Ansible homework] ***********************************************
+
+TASK [Gathering Facts] *********************************************************
+fatal: [server1]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: ssh: connect to host 192.168.0.10 port 22: No route to host", "unreachable": true}
+
+PLAY RECAP *********************************************************************
+server1                    : ok=0    changed=0    unreachable=1    failed=0    skipped=0    rescued=0    ignored=0   
+
